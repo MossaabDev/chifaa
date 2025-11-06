@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  baseURL: import.meta.env.VITE_AZURE_LLM_ENDPOINT,
-  apiKey: import.meta.env.VITE_AZURE_LLM_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 interface Verse {
+  question: string;
   answer: string;
+}
+
+interface Reflection {
+  reflection: string;
+}
+
+interface ApiResponse {
+  reflection: Reflection;
+  ayahs: Verse[];
 }
 
 export default function Answer() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [answer, setAnswer] = useState("");
+  const [reflection, setReflection] = useState("");
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,25 +32,7 @@ export default function Answer() {
       try {
         setLoading(true);
 
-        // --- Fetch AI Reflection ---
-        const completion = await client.chat.completions.create({
-            model: import.meta.env.VITE_AZURE_LLM_DEPLOYMENT,
-            messages: [
-              {
-                role: "system",
-                content:
-                  "You are a compassionate Islamic guide who offers emotional and spiritual comfort. Keep your answers short (no more than 50 words). Do not include or quote Qur’an verses — simply provide warm, faith-inspired reflections and gentle advice based on Islamic values.",
-    },
-              {
-                role: "user",
-                content: state.prompt,
-              },
-            ],
-          });
-          const generatedAnswer =
-      completion.choices?.[0]?.message?.content || "No response received.";
-        // --- Fetch Qur'an Verses ---
-        const verseRes = await fetch(
+        const response = await fetch(
           "https://mossaabdev-shifaa-api.hf.space/ask/",
           {
             method: "POST",
@@ -55,10 +40,13 @@ export default function Answer() {
             body: JSON.stringify({ question: state.prompt }),
           }
         );
-        const verseData = await verseRes.json();
 
-        setAnswer(generatedAnswer);
-        setVerses(verseData.results || []);
+        if (!response.ok) throw new Error("Failed to fetch reflection");
+
+        const data: ApiResponse = await response.json();
+
+        setReflection(data.reflection.reflection);
+        setVerses(data.ayahs || []);
       } catch (err) {
         console.error("Error fetching data:", err);
       } finally {
@@ -74,9 +62,11 @@ export default function Answer() {
       {/* Top bar */}
       <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-600 to-green-800"></div>
 
-      <div className="relative w-full flex flex-col items-center justify-center text-center 
+      <div
+        className="relative w-full flex flex-col items-center justify-center text-center 
                       bg-white/30 backdrop-blur-xl border-t border-b border-green-100 py-20 px-8 shadow-xl
-                      lg:px-32 xl:px-48 2xl:px-60">
+                      lg:px-32 xl:px-48 2xl:px-60"
+      >
         <h1 className="text-5xl font-bold text-green-900 mb-8 font-serif tracking-wide">
           Reflection
         </h1>
@@ -86,7 +76,7 @@ export default function Answer() {
         ) : (
           <>
             <p className="text-gray-700 mb-10 leading-relaxed text-lg max-w-4xl">
-              {answer || "No reflection found."}
+              {reflection || "No reflection found."}
             </p>
 
             <div className="flex flex-col gap-6 w-full max-w-3xl">
