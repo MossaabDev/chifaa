@@ -35,7 +35,7 @@ export default function Home() {
 
         {/* Headings */}
         <h1 className="text-5xl font-bold text-green-900 mb-4 font-serif tracking-wide">
-          Divine Guidance
+          Shifaa
         </h1>
         <p className="text-gray-700 mb-10 leading-relaxed text-lg w-full">
 
