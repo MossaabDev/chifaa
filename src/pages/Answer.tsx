@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 interface Verse {
   question: string;
   answer: string;
+  arabic: string;
 }
 
 interface Reflection {
@@ -80,15 +81,25 @@ export default function Answer() {
             </p>
 
             <div className="flex flex-col gap-6 w-full max-w-3xl">
-              {verses.map((v, i) => (
-                <div
-                  key={i}
-                  className="p-6 rounded-2xl bg-white/60 border border-green-200 text-green-800 shadow-md hover:shadow-lg transition"
-                >
-                  <p className="font-serif text-lg">{v.answer}</p>
-                </div>
-              ))}
-            </div>
+  {verses.slice(0, 1).map((v, i) => (
+    <div
+      key={i}
+      className="p-6 rounded-2xl bg-white/70 border border-green-200 text-center 
+                 text-green-900 shadow-md hover:shadow-lg transition-all duration-300"
+    >
+      {/* Arabic verse */}
+      <p className="font-[Amiri] text-2xl md:text-3xl leading-relaxed mb-3 text-green-950">
+        {v.arabic}
+      </p>
+
+      {/* English translation */}
+      <p className="font-serif text-base md:text-lg text-green-700/80 italic">
+        {v.answer}
+      </p>
+    </div>
+  ))}
+</div>
+
           </>
         )}
 

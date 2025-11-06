@@ -92,7 +92,7 @@ export default function Home() {
         {/* Decorative basmala */}
         <div className="mt-16 opacity-70">
           <div className="text-green-800 text-lg font-serif tracking-widest">
-            بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+          يَـٰٓأَيُّهَا ٱلنَّاسُ قَدْ جَآءَتْكُم مَّوْعِظَةٌۭ مِّن رَّبِّكُمْ وَشِفَآءٌۭ لِّمَا فِى ٱلصُّدُورِ وَهُدًۭى وَرَحْمَةٌۭ لِّلْمُؤْمِنِينَ
           </div>
         </div>
       </div>
