@@ -93,7 +93,7 @@ export default function Answer() {
     const verse = Number(match[2]);
   
     const res = await fetch(
-      `http://api.alquran.cloud/v1/surah/${chapter}/ar.alafasy`
+      `https://api.alquran.cloud/v1/surah/${chapter}/ar.alafasy`
     );
   
     const data = await res.json();
